@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Retirement Visualizer</title>
+    <style>
+    * {
+      font-family: sans-serif;
+      line-height: 1.5;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="container" style="height: 600px;"></div>
+    <label>Current Age</label>
+    <input type="number" name="currentAge" value="26" min="10">
+    <br>
+
+    <label>Current Money</label>
+    <input type="text" name="currentMoney">
+    <br>
+
+    <label>Return Rate</label>
+    <input type="text" name="returnRate">
+    <br>
+
+    <label>Inflation Rate</label>
+    <input type="text" name="inflationRate">
+    <br>
+
+    <label>Annual Contribution (until retirement)</label>
+    <input type="text" name="annualContribution">
+    <br>
+
+    <label>Annual Drawdown (after retirement)</label>
+    <input type="text" name="annualDrawdown">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.1.0/autoNumeric.min.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
