@@ -88,11 +88,6 @@ const chartOptions = {
     animation: false,
     type: 'area',
     renderTo: 'container',
-    events: {
-      redraw: function(event) {
-        console.log('Chart loaded');
-      }
-    },
   },
   xAxis: {
     categories: getMoney().map(t => t.year),
@@ -139,7 +134,6 @@ const chartOptions = {
 
       if (isDragging) {
         if (this.x < currentYear) { return; }
-        console.log('setting retirement age to', this.x, currentYear, currentAge);
         retirementAge = (this.x - currentYear) + currentAge;
         isDragging = false;
         chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
@@ -175,81 +169,37 @@ chart = new Highcharts.Chart(chartOptions, chart => {
 
 
 document.querySelector('[name=currentAge]').addEventListener('input', e => {
-  currentAge = e.target.value;
+  currentAge = Number(e.target.value);
   if (currentAge <= 10 || currentAge > retirementAge) { return; }
-  chart.series[0].setData(getMoney().map(t => t.money), true);
-  chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
-  chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
-  chart.xAxis[0].update();
-  chart.xAxis[0].plotLinesAndBands[0].svgElem
-    .css({
-      cursor: 'col-resize',
-    })
-    .on('mousedown', start);
-  chart.redraw();
+  redrawChart();
 });
 
 document.querySelector('[name=currentMoney]').addEventListener('input', e => {
   currentMoney = Number(currentMoneyAN.getNumericString());
-  chart.series[0].setData(getMoney().map(t => t.money), true);
-  chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
-  chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
-  chart.xAxis[0].update();
-  chart.xAxis[0].plotLinesAndBands[0].svgElem
-    .css({
-      cursor: 'col-resize',
-    })
-    .on('mousedown', start);
-  chart.redraw();
-
+  redrawChart();
 });
 
 document.querySelector('[name=returnRate]').addEventListener('input', e => {
   returnRate = Number(returnRateAN.getNumericString());
-  chart.series[0].setData(getMoney().map(t => t.money), true);
-  chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
-  chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
-  chart.xAxis[0].update();
-  chart.xAxis[0].plotLinesAndBands[0].svgElem
-    .css({
-      cursor: 'col-resize',
-    })
-    .on('mousedown', start);
-  chart.redraw();
-
+  redrawChart();
 });
 
 document.querySelector('[name=annualContribution]').addEventListener('input', e => {
   annualContribution = Number(annualContributionAN.getNumericString());
-  chart.series[0].setData(getMoney().map(t => t.money), true);
-  chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
-  chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
-  chart.xAxis[0].update();
-  chart.xAxis[0].plotLinesAndBands[0].svgElem
-    .css({
-      cursor: 'col-resize',
-    })
-    .on('mousedown', start);
-  chart.redraw();
-
+  redrawChart();
 });
 
 document.querySelector('[name=annualDrawdown]').addEventListener('input', e => {
   annualDrawdown = Number(annualDrawdownAN.getNumericString());
-  chart.series[0].setData(getMoney().map(t => t.money), true);
-  chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
-  chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
-  chart.xAxis[0].update();
-  chart.xAxis[0].plotLinesAndBands[0].svgElem
-    .css({
-      cursor: 'col-resize',
-    })
-    .on('mousedown', start);
-  chart.redraw();
+  redrawChart();
 });
 
 document.querySelector('[name=inflationRate]').addEventListener('input', e => {
   inflationRate = Number(inflationRateAN.getNumericString());
+  redrawChart();
+});
+
+const redrawChart = () => {
   chart.series[0].setData(getMoney().map(t => t.money), true);
   chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
   chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
@@ -260,4 +210,4 @@ document.querySelector('[name=inflationRate]').addEventListener('input', e => {
     })
     .on('mousedown', start);
   chart.redraw();
-});
+};
