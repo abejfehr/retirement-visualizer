@@ -190,7 +190,7 @@ document.querySelector('[name=currentAge]').addEventListener('input', e => {
 });
 
 document.querySelector('[name=currentMoney]').addEventListener('input', e => {
-  currentMoney = Number.parseFloat(e.target.value);
+  currentMoney = Number(currentMoneyAN.getNumericString());
   chart.series[0].setData(getMoney().map(t => t.money), true);
   chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
   chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
@@ -205,7 +205,7 @@ document.querySelector('[name=currentMoney]').addEventListener('input', e => {
 });
 
 document.querySelector('[name=returnRate]').addEventListener('input', e => {
-  returnRate = Number.parseFloat(e.target.value);
+  returnRate = Number(returnRateAN.getNumericString());
   chart.series[0].setData(getMoney().map(t => t.money), true);
   chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
   chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
@@ -220,7 +220,7 @@ document.querySelector('[name=returnRate]').addEventListener('input', e => {
 });
 
 document.querySelector('[name=annualContribution]').addEventListener('input', e => {
-  annualContribution = Number.parseFloat(e.target.value);
+  annualContribution = Number(annualContributionAN.getNumericString());
   chart.series[0].setData(getMoney().map(t => t.money), true);
   chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
   chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
@@ -235,7 +235,21 @@ document.querySelector('[name=annualContribution]').addEventListener('input', e 
 });
 
 document.querySelector('[name=annualDrawdown]').addEventListener('input', e => {
-  annualDrawdown = Number.parseFloat(e.target.value);
+  annualDrawdown = Number(annualDrawdownAN.getNumericString());
+  chart.series[0].setData(getMoney().map(t => t.money), true);
+  chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
+  chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
+  chart.xAxis[0].update();
+  chart.xAxis[0].plotLinesAndBands[0].svgElem
+    .css({
+      cursor: 'col-resize',
+    })
+    .on('mousedown', start);
+  chart.redraw();
+});
+
+document.querySelector('[name=inflationRate]').addEventListener('input', e => {
+  inflationRate = Number(inflationRateAN.getNumericString());
   chart.series[0].setData(getMoney().map(t => t.money), true);
   chart.xAxis[0].setCategories(getMoney().map(t => t.year), true);
   chart.xAxis[0].options.plotLines[0].value = retirementAge - currentAge;
