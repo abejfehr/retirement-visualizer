@@ -3,41 +3,92 @@
   <head>
     <meta charset="utf-8">
     <title>Retirement Visualizer</title>
+    <link href="https://fonts.googleapis.com/css?family=Signika:400,700" rel="stylesheet">
     <style>
     * {
-      font-family: sans-serif;
+      font-family: 'Signika', sans-serif;
       line-height: 1.5;
+      color: #2C3A47;
+    }
+
+    body {
+      background-color: #f5f6fa;
+    }
+
+    .sentences {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .ahhh {
+      position: absolute;
+      top: 80px;
+      left: 80px;
+      pointer-events: none;
+    }
+
+    h1 {
+      font-size: 42px;
+      margin: 8px 0;
+    }
+
+    .sentence-input {
+      border-top: none;
+      border-right: none;
+      border-left: none;
+      width: 50px;
+      font-size: 18px;
+      height: 20px;
+      background: none;
+      pointer-events: fill;
+    }
+
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
     }
     </style>
   </head>
   <body>
-    <div id="container" style="height: 600px;"></div>
-    <label>Current Age</label>
-    <input type="number" name="currentAge" value="26" min="10">
-    <br>
+    <!-- where the chart will be drawn -->
+    <svg></svg>
 
-    <label>Current Money</label>
-    <input type="text" name="currentMoney">
-    <br>
+    <div class="ahhh">
+      <h1>Retirement Visualizer</h1>
+      <div class="sentences">
+        I'm <input class="sentence-input" type="number" name="currentAge" value="26" min="10"> years old and plan on retiring when I'm <input class="sentence-input" type="number" name="retirementAge" value="65" >. <br>
+        I have <input class="sentence-input" type="text" name="currentMoney"> right now and can contribute <input class="sentence-input" type="text" name="annualContribution"> annually until I retire.<br>
+        My investment's return rate is estimated to be <input class="sentence-input" type="text" name="returnRate">.<br>
+        When I retire, I plan on living off of <input class="sentence-input" type="text" name="annualDrawdown"> every year.<br>
+        Inflation rate in my country is around <input class="sentence-input" type="text" name="inflationRate">.<br>
+      </div>
+    </div>
 
-    <label>Return Rate</label>
-    <input type="text" name="returnRate">
-    <br>
-
-    <label>Inflation Rate</label>
-    <input type="text" name="inflationRate">
-    <br>
-
-    <label>Annual Contribution (until retirement)</label>
-    <input type="text" name="annualContribution">
-    <br>
-
-    <label>Annual Drawdown (after retirement)</label>
-    <input type="text" name="annualDrawdown">
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.1.0/autoNumeric.min.js"></script>
-    <script src="index.js"></script>
+    <script src="dist/main.js"></script>
+    <script>
+      const getWidth = (length, type) => {
+        if (length) {
+          if (type === 'number') {
+            return 20 + length * 8;
+          }
+
+          return 13 + length * 8;
+        }
+
+        return 30;
+      };
+
+      document.querySelectorAll('.sentence-input').forEach((input) => {
+        input.style.width = `${getWidth(input.value.length, input.getAttribute('type'))}px`;
+        input.addEventListener('change', (e) => {
+          e.target.style.width = `${getWidth(e.target.value.length, e.target.getAttribute('type'))}px`;
+        })
+        input.addEventListener('input', (e) => {
+          e.target.style.width = `${getWidth(e.target.value.length, e.target.getAttribute('type'))}px`;
+        })
+      });
+    </script>
   </body>
 </html>
