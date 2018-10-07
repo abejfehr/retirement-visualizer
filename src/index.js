@@ -1,5 +1,6 @@
 import RetireBot from './RetireBot';
 import RetirementChart from './RetirementChart';
+import ordinal from 'ordinal-js';
 
 const currentMoneyAN = new AutoNumeric(
 	'[name=currentMoney]',
@@ -34,6 +35,10 @@ let returnRate = Number(returnRateAN.getNumericString());
 let annualDrawdown = Number(annualDrawdownAN.getNumericString());
 let annualContribution = Number(annualContributionAN.getNumericString());
 
+const updateBirthday = (age) => {
+	document.querySelector('.birthday-age').innerHTML = `${age}<sup>${ordinal.ordinalSuffix(age)}</sup>`;
+}
+
 const redrawChart = () => {
   // This data needs to be totally dynamic based on user interaction
   let { data, endOfMoney } = RetireBot.getFiguresFor({
@@ -49,7 +54,8 @@ const redrawChart = () => {
   // TODO: This data needs to be updated by user input
 
   // draw the chart
-  chart.update(data, retirementAge, currentAge, endOfMoney);
+	chart.update(data, retirementAge, currentAge, endOfMoney);
+	updateBirthday(currentAge);
 }
 
 let { data, endOfMoney } = RetireBot.getFiguresFor({
@@ -77,7 +83,9 @@ chart = new RetirementChart(data, retirementAge, currentAge, endOfMoney, (ratio)
 		annualContribution,
 	});
 	chart.update(data, retirementAge, currentAge, endOfMoney);
+	updateBirthday(currentAge);
 });
+updateBirthday(currentAge);
 
 document.querySelector('[name=currentAge]').addEventListener('input', e => {
 	currentAge = Number(e.target.value);

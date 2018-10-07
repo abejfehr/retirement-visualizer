@@ -3,7 +3,8 @@ import * as d3 from 'd3';
 
 export default class RetirementChart {
   constructor(data, retirementAge, currentAge, endOfMoney, updateCallback) {
-    this.data = this.type(data);
+    this._data = data;
+    this.data = this.type(this._data);
     this.retirementAge = retirementAge;
     this.currentAge = currentAge;
     this.endOfMoney = endOfMoney;
@@ -13,22 +14,19 @@ export default class RetirementChart {
     this.DURATION = 200;
 
     // Set the dimensions of the canvas / graph
-    const margin = {
+    this.margin = {
       top: 80,
       right: 0,
       bottom: 20,
       left: 0,
     };
 
-    const width = window.innerWidth - margin.left - margin.right;
-    const height = window.innerHeight - margin.top - margin.bottom;
-
-    this.width = width;
-    this.height = height;
+    this.width = window.innerWidth - this.margin.left - this.margin.right;
+    this.height = window.innerHeight - this.margin.top - this.margin.bottom;
 
     // Set the scales ranges
-    this.x = d3.scaleTime().range([0, width]);
-    this.y = d3.scaleLinear().range([height, 0]);
+    this.x = d3.scaleTime().range([0, this.width]);
+    this.y = d3.scaleLinear().range([this.height, 0]);
 
     // Define the axes
     this.xAxis = d3.axisBottom().scale(this.x);
@@ -42,10 +40,10 @@ export default class RetirementChart {
     // Add the svg canvas
     this.svg = d3
       .select('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
+        .attr('width', this.width + this.margin.left + this.margin.right)
+        .attr('height', this.height + this.margin.top + this.margin.bottom)
       .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
     // set the domain range from the data
     this.x.domain(d3.extent(this.data, (d) => { return d.year; }));
@@ -54,6 +52,12 @@ export default class RetirementChart {
       d3.max(this.data, (d) => { return ~~(d.money); })
     ]);
     this.area.y0(this.y(0));
+
+    // background
+    this.svg.append('rect')
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .attr('fill', '#f5f6fa');
 
     // draw the area created above
     this.svg.append('path')
@@ -65,7 +69,7 @@ export default class RetirementChart {
 
     // Add the X Axis
     this.svg.append('g')
-      .attr('transform', 'translate(0,' + height + ')')
+      .attr('transform', 'translate(0,' + this.height + ')')
       .attr('class', 'x axis')
       .call(this.xAxis);
 
@@ -77,11 +81,12 @@ export default class RetirementChart {
     const retirement = new Date((new Date()).getFullYear() + this.retirementAge - this.currentAge, 0, 1);
     var bisect = d3.bisector(function(d) { return d.year; }).left;
     var item = this.data[bisect(this.data, retirement)];
+    // console.log('item', item);
     this.svg.append('line')
       .attr('x1', this.x(retirement))
       .attr('y1', this.y(item.money) + 2)
       .attr('x2', this.x(retirement))
-      .attr('y2', height)
+      .attr('y2', this.height)
       .attr('class', 'retirement line')
       .style('stroke-width', 3)
       .style('stroke-linecap', 'round')
@@ -138,12 +143,12 @@ export default class RetirementChart {
     }
 
     // handlers
-    const klaz = this;
+    const klaz = this; // Required because d3 wants to control callback binding :/
     this.svg
       .on('mousemove', function () {
         d3.event.preventDefault();
         if (klaz.isMouseDown) {
-          updateCallback(d3.mouse(this)[0] / width);
+          updateCallback(d3.mouse(this)[0] / klaz.width);
         }
       })
 
@@ -154,13 +159,31 @@ export default class RetirementChart {
       .on('mouseup', () => {
         this.isMouseDown = false;
       });
+
+
+    window.addEventListener('resize', () => {
+      // debugger;
+      console.log(this._data, this.retirementAge, this.currentAge, this.endOfMoney);
+      this.update(this._data, this.retirementAge, this.currentAge, this.endOfMoney);
+    });
   }
 
   update(data, retirementAge, currentAge, endOfMoney) {
-    this.data = this.type(data);
+    this._data = data;
+    this.data = this.type(this._data);
+    // console.log('a', this.data);
     this.retirementAge = retirementAge;
     this.currentAge = currentAge;
     this.endOfMoney = endOfMoney;
+
+    this.width = window.innerWidth - this.margin.left - this.margin.right;
+    this.height = window.innerHeight - this.margin.top - this.margin.bottom;
+
+    this.x = d3.scaleTime().range([0, this.width]);
+    this.y = d3.scaleLinear().range([this.height, 0]);
+
+    this.xAxis = d3.axisBottom().scale(this.x);
+    this.yAxis = d3.axisLeft().scale(this.y);
 
     this.x.domain(d3.extent(this.data, (d) => { return d.year; }));
     this.y.domain([
@@ -169,12 +192,17 @@ export default class RetirementChart {
     ]);
     this.area.y0(this.y(0));
 
+    d3.select('svg')
+      .attr('width', this.width + this.margin.left + this.margin.right)
+      .attr('height', this.height + this.margin.top + this.margin.bottom);
+
     var svg = d3.select('body').transition();
       svg.select('.data.line')
         .duration(0)
         .attr('d', this.area(this.data))
       svg.select('.x.axis')
-        .duration(this.DURATION)
+        .duration(0)
+        .attr('transform', 'translate(0,' + this.height + ')')
         .call(this.xAxis)
       svg.select('.y.axis')
         .duration(this.DURATION)
@@ -182,6 +210,7 @@ export default class RetirementChart {
       const retirement = new Date((new Date()).getFullYear() + this.retirementAge - this.currentAge, 0, 1);
       var bisect = d3.bisector(function(d) { return d.year; }).left;
       var item = this.data[bisect(this.data, retirement)];
+      console.log('item', item, retirement, this.data);
       svg.select('.retirement.line')
         .duration(0)
         .attr('x1', this.x(retirement))
@@ -226,8 +255,9 @@ export default class RetirementChart {
   }
 
   type(dataArray) {
+    console.log('da', dataArray);
     dataArray.forEach((d) => {
-      d.year = this.parseDate(d.year);
+      d.year = d.year.constructor === Date ? d.year : this.parseDate(d.year);
       d.retention = +d.money;
     });
     return dataArray;

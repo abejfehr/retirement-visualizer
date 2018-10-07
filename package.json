@@ -1,6 +1,6 @@
 {
   "dependencies": {
     "d3": "^5.7.0",
-    "d3-tip": "^0.9.1"
+    "ordinal-js": "^1.1.0"
   }
 }

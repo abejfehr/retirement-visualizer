@@ -35,8 +35,8 @@ export default class RetireBot {
     for (let i = currentAge; i <= retirementAge; ++i) {
       money = this.compoundInterest({
         P: currentMoney,
-        r: returnRate - inflationRate,
-        n: 1,
+        r: (returnRate - inflationRate),
+        n: 365,
         t: i - currentAge,
         c: annualContribution,
       });
@@ -53,8 +53,8 @@ export default class RetireBot {
     for (let i = retirementAge; i < MAX_AGE; ++i) {
       money = this.compoundInterest({
         P: retirementMoney,
-        r: returnRate - inflationRate,
-        n: 1,
+        r: (returnRate - inflationRate),
+        n: 365,
         t: i - retirementAge,
         c: -annualDrawdown,
       });
@@ -67,7 +67,6 @@ export default class RetireBot {
       });
     }
 
-    console.log(endOfMoney);
     return { data, endOfMoney };
   }
 }

@@ -48,20 +48,67 @@
       top: 0;
       left: 0;
     }
+
+    .links {
+      margin: 0 0 16px;
+      color: #838A90;
+      pointer-events: fill;
+    }
+    .links a {
+      color: #838A90;
+    }
+
+    .ohhh {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-color: #f5f6fa;
+      display: block;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 200ms;
+    }
+
+    .ohhh:target {
+      display: block;
+      pointer-events: fill;
+      opacity: 1;
+    }
+
+    .ohhh .another-container {
+      margin: 80px;
+    }
     </style>
   </head>
   <body>
-    <!-- where the chart will be drawn -->
     <svg></svg>
 
     <div class="ahhh">
       <h1>Retirement Visualizer</h1>
+      <div class="links">
+        <a href="#assumptions">Assumptions</a><!--&nbsp;&nbsp;•&nbsp;&nbsp;<a href="#">How to use this</a>-->
+      </div>
       <div class="sentences">
         I'm <input class="sentence-input" type="number" name="currentAge" value="26" min="10"> years old and plan on retiring when I'm <input class="sentence-input" type="number" name="retirementAge" value="65" >. <br>
         I have <input class="sentence-input" type="text" name="currentMoney"> right now and can contribute <input class="sentence-input" type="text" name="annualContribution"> annually until I retire.<br>
         My investment's return rate is estimated to be <input class="sentence-input" type="text" name="returnRate">.<br>
         When I retire, I plan on living off of <input class="sentence-input" type="text" name="annualDrawdown"> every year.<br>
         Inflation rate in my country is around <input class="sentence-input" type="text" name="inflationRate">.<br>
+      </div>
+    </div>
+
+    <div class="ohhh" id="assumptions">
+      <div class="another-container">
+        <h2>Assumptions I've made</h2>
+        <p>As with any financial calculator, some things have to be assumed which make it more simple.</p>
+        <ul>
+          <li>Annual contributions will be made at the end of each year</li>
+          <li>Returns (less inflation) is compounded daily</li>
+          <li>Your <span class="birthday-age"></span> birthday is today 🎉</li>
+        </ul>
+        <a href="#">Go back to the chart</a>
       </div>
     </div>
 
