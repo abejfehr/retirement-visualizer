@@ -17,7 +17,7 @@ export default class RetirementChart {
     this.margin = {
       top: 80,
       right: 0,
-      bottom: 20,
+      bottom: 28,
       left: 0,
     };
 
@@ -69,6 +69,7 @@ export default class RetirementChart {
 
     // Add the X Axis
     this.svg.append('g')
+      .style('font-size', '20px')
       .attr('transform', 'translate(0,' + this.height + ')')
       .attr('class', 'x axis')
       .call(this.xAxis);
