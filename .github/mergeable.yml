@@ -1,0 +1,6 @@
+mergeable:
+  pull_requests:
+    description:
+      must_exclude:
+        regex: '- \[ \]'
+        message: 'There are still things to check off!'
